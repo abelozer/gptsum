@@ -489,6 +489,7 @@
         pasteButton.addEventListener("click", triggerPaste);
       }
       pasteButton.addEventListener("keydown", triggerPaste);
+      pasteButton.addEventListener("click", handlePaste);
       resetButton.addEventListener("click", handleReset);
       iterationsInput.addEventListener("change", (event) => {
         updateWordLimitInputs(event.target.value);
