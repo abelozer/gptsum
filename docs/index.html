@@ -370,15 +370,7 @@
         }
       }
 
-      async function triggerPaste(event) {
-        if (event && event.type === "keydown") {
-          const key = event.key;
-          if (key !== "Enter" && key !== " " && key !== "Space" && key !== "Spacebar") {
-            return;
-          }
-          event.preventDefault();
-        }
-
+      async function triggerPaste() {
         if (pasteInProgress) {
           return;
         }
@@ -480,7 +472,6 @@
       // Event listeners
       form.addEventListener("submit", handleSubmit);
       pasteButton.addEventListener("click", triggerPaste);
-      pasteButton.addEventListener("keydown", triggerPaste);
       resetButton.addEventListener("click", handleReset);
       iterationsInput.addEventListener("change", (event) => {
         updateWordLimitInputs(event.target.value);
