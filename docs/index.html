@@ -324,6 +324,7 @@
       const summaryTemplate = document.getElementById("summaryTemplate");
 
       const DEFAULT_WORD_LIMITS = [80, 160, 320, 480, 640, 800, 900, 1000];
+      let pasteInProgress = false;
 
       function updateWordLimitInputs(iterations) {
         const desiredCount = Math.max(1, Math.min(8, Number(iterations) || 1));
@@ -366,6 +367,31 @@
         } catch (error) {
           console.error("Clipboard read failed", error);
           statusText.textContent = "Unable to read clipboard contents.";
+        }
+      }
+
+      async function triggerPaste(event) {
+        if (event) {
+          if (event.type === "keydown") {
+            const key = event.key;
+            if (key !== "Enter" && key !== " " && key !== "Space" && key !== "Spacebar") {
+              return;
+            }
+            event.preventDefault();
+          } else {
+            event.preventDefault();
+          }
+        }
+
+        if (pasteInProgress) {
+          return;
+        }
+
+        pasteInProgress = true;
+        try {
+          await handlePaste();
+        } finally {
+          pasteInProgress = false;
         }
       }
 
@@ -457,6 +483,12 @@
 
       // Event listeners
       form.addEventListener("submit", handleSubmit);
+      if (window.PointerEvent) {
+        pasteButton.addEventListener("pointerdown", triggerPaste);
+      } else {
+        pasteButton.addEventListener("click", triggerPaste);
+      }
+      pasteButton.addEventListener("keydown", triggerPaste);
       pasteButton.addEventListener("click", handlePaste);
       resetButton.addEventListener("click", handleReset);
       iterationsInput.addEventListener("change", (event) => {
